@@ -4,21 +4,29 @@
 import sys, json, os, string
 from hcluster import jaccard, euclidean, cityblock
 
-class SimilarHackerSchoolers(object):
+class HSMatch(object):
 
-  def __init__(self, compare_person):
-    data = self.load_data()
+  def __init__(self):
+    self.data = self.load_data()
+
+  def load_data(self):
+    data_file = open(os.path.join(os.path.dirname(__file__), 'data.json'))
+    data = json.load(data_file)
+    data_file.close()
+    return data
+
+  def compare(self, compare_person):
     all_skills = []
     all_people = []
 
-    for person, info in data.items():
+    for person, info in self.data.items():
       all_people.append(person)
       all_skills.extend(info['skills'])
 
     all_skills = list(set(all_skills))
 
     numerical_data = {}
-    for person, info in data.items():
+    for person, info in self.data.items():
       v = []
       for s in all_skills:
         if s in info['skills']:
@@ -33,17 +41,10 @@ class SimilarHackerSchoolers(object):
       d = jaccard(numerical_data[compare_person], numerical_data[person])
       results[person] = {
         'score': d,
-        'shared_skills': list(set(data[compare_person]['skills']).intersection(set(data[person]['skills'])))
+        'shared_skills': list(set(self.data[compare_person]['skills']).intersection(set(self.data[person]['skills'])))
       }
 
-    self.print_results(sorted(results.items(), key=lambda(u,s):(s['score'], u)))
-
-
-  def load_data(self):
-    data_file = open(os.path.join(os.path.dirname(__file__), 'data.json'))
-    data = json.load(data_file)
-    data_file.close()
-    return data
+    return sorted(results.items(), key=lambda(u,s):(s['score'], u))
 
 
   def print_results(self, results):
@@ -57,4 +58,5 @@ if __name__ == '__main__':
   except ValueError:
     print "Usage: python delicious_import.py username password"
 
-  sim = SimilarHackerSchoolers(compare_person)
+  sim = HSMatch()
+  sim.print_results(sim.compare(compare_person))

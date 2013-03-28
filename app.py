@@ -1,12 +1,23 @@
-import os
-from flask import Flask
-import SimilarHackerSchoolers
+import os, json
+from flask import Flask, request
+from hsmatch import HSMatch
 
 app = Flask(__name__)
+app.debug = True
 
 @app.route('/')
 def hello():
-  return 'Hello worlds'
+  sim = HSMatch()
+  person = request.args.get('person', None)
+  if person is None:
+    return json.dumps({})
+  else:
+    try:
+      results = sim.compare(person)[1:6]
+      return json.dumps(results)
+    except KeyError:
+      return json.dumps({})
+
 
 if __name__ == '__main__':
   port = int(os.environ.get('PORT', 5000))
