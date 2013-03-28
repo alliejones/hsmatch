@@ -1,12 +1,12 @@
 import os
 from flask import Flask
-from flask.ext.jsonpify import jsonify
+import SimilarHackerSchoolers
 
 app = Flask(__name__)
 
 @app.route('/')
 def hello():
-  return jsonify(user="User Name")
+  return 'Hello worlds'
 
 if __name__ == '__main__':
   port = int(os.environ.get('PORT', 5000))
