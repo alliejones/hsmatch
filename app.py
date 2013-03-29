@@ -6,17 +6,28 @@ app = Flask(__name__)
 app.debug = True
 
 @app.route('/')
-def hello():
-  sim = HSMatch()
+def index():
   person = request.args.get('person', None)
+  callback = request.args.get('callback', None)
   if person is None:
     return json.dumps({})
   else:
-    try:
-      results = sim.compare(person)[1:6]
-      return json.dumps(results)
-    except KeyError:
-      return json.dumps({})
+    data = match_json(person)
+    if callback is None:
+      return data
+    else:
+      return callback + '(' + data + ')'
+
+
+
+
+def match_json(person):
+  sim = HSMatch()
+  try:
+    results = sim.compare(person)[1:6]
+    return json.dumps(results)
+  except KeyError:
+    return json.dumps({})
 
 
 if __name__ == '__main__':
