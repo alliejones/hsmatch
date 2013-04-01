@@ -81,4 +81,6 @@ $(document).ready(function() { if (typeof HSMatch === 'undefined') {
 
   window.HSMatch = {};
   window.HSMatch.data = scrape();
+
+  $.post('http://0.0.0.0:5000/', { data: HSMatch.data });
 }});

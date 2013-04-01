@@ -18,6 +18,11 @@ def index():
     else:
       return callback + '(' + data + ')'
 
+@app.route('/update', methods = ['POST'])
+def update():
+  resp = Response(js, status=200, mimetype='application/json')
+  resp.headers['Access-Control-Allow-Origin'] = 'http://hsmatch.dev/'
+  return resp
 
 
 
