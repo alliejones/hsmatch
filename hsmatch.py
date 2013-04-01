@@ -6,14 +6,8 @@ from hcluster import jaccard, euclidean, cityblock
 
 class HSMatch(object):
 
-  def __init__(self):
-    self.data = self.load_data()
-
-  def load_data(self):
-    data_file = open(os.path.join(os.path.dirname(__file__), 'data.json'))
-    data = json.load(data_file)
-    data_file.close()
-    return data
+  def __init__(self, data):
+    self.data = data
 
   def compare(self, compare_person):
     all_skills = []

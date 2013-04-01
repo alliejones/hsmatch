@@ -1,4 +1,5 @@
 $(document).ready(function() { if (typeof HSMatch === 'undefined') {
+  var baseUrl = 'http://0.0.0.0:5000/';
 
   /* Results display */
 
@@ -40,8 +41,7 @@ $(document).ready(function() { if (typeof HSMatch === 'undefined') {
 
 
   var getMatches = function (name) {
-    var url =  "https://hsmatch.herokuapp.com/";
-    $.getJSON(url + "?person="+encodeURIComponent(name)+"&callback=?", null, showMatches(name));
+    $.getJSON(baseUrl + "?person="+encodeURIComponent(name)+"&callback=?", null, showMatches(name));
   };
 
   var showMatches = function(name) {
@@ -82,5 +82,5 @@ $(document).ready(function() { if (typeof HSMatch === 'undefined') {
   window.HSMatch = {};
   window.HSMatch.data = scrape();
 
-  $.post('http://0.0.0.0:5000/', { data: HSMatch.data });
+  $.post(baseUrl+'update', { data: HSMatch.data });
 }});
