@@ -1,4 +1,7 @@
-$(document).ready(function() {
+$(document).ready(function() { if (typeof HSMatch === 'undefined') {
+
+  /* Results display */
+
   var modalStyles = {
     background: '#fff',
     border: '5px solid #000',
@@ -21,6 +24,41 @@ $(document).ready(function() {
 
   var closeModal = function (e) { $('#hsmatch-modal').remove(); e.preventDefault(); }
 
+  var findMatches = function (e) {
+    e.preventDefault();
+    var name = $(e.target).prev('.name').text();
+    showModal(name);
+  };
+
+  var createLinks = function() {
+    $('.person').css('height', '280px');
+    $('.name').filter(function() {
+      return $(this).siblings('.skills').text() !== '';
+    }).after('<a href="#" class="find_matches">Find matches</a>');
+
+  };
+
+
+  var getMatches = function (name) {
+    var url =  "https://hsmatch.herokuapp.com/";
+    $.getJSON(url + "?person="+encodeURIComponent(name)+"&callback=?", null, showMatches(name));
+  };
+
+  var showMatches = function(name) {
+    var name = name;
+
+    return function (matches) {
+      var selector = $.map(matches, function(match, i) { return '.person:contains("'+match[0]+'")'; }).join(', ');
+      var people = $(selector).clone().css({ width: '150px', display: 'inline-block', verticalAlign: 'top', margin: '15px' });
+      $('.find_matches, .skills, .irc', people).remove();
+      $('#hsmatch-modal .matches').empty().append('<h2>Hacker Schoolers with the skillset most like '+name+':</h2>').after(people);
+    };
+  };
+
+
+  /* Setup */
+
+  // Scrape the skill data from the page
   var scrape = function() {
     var people = [];
     $.each($('.person'), function() {
@@ -36,31 +74,11 @@ $(document).ready(function() {
     return people;
   };
 
-  var findMatches = function (e) {
-    e.preventDefault();
-    var name = $(e.target).prev('.name').text();
-    showModal(name);
-  };
-
-  var createLinks = function() {
-    $('.name').after('<a href="#" class="find_matches">Find matches</a>');
-    $('.find_matches').on('click', findMatches);
-  };
+  createLinks();
 
   $('body').on('click', '.close', closeModal);
+  $('body').on('click', '.find_matches', findMatches);
 
-  var getMatches = function (name) {
-    var url =  "http:///0.0.0.0:5000/";
-    $.getJSON(url + "?person="+encodeURIComponent(name)+"&callback=?", null, showMatches);
-  };
-
-  var showMatches = function (matches) {
-    var selector = $.map(matches, function(match, i) { return '.person:contains("'+match[0]+'")'; }).join(', ');
-    var people = $(selector).clone().css({ width: '150px', display: 'inline-block', verticalAlign: 'top', margin: '15px' });
-    $('.find_matches, .skills, .irc', people).remove();
-    $('#hsmatch-modal .matches').empty().append('<h2>Hacker Schoolers with the skillset most like yours:</h2>').after(people);
-  };
-
-  createLinks();
-  window.HSMatchData = scrape();
-});
+  window.HSMatch = {};
+  window.HSMatch.data = scrape();
+}});
