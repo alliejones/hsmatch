@@ -3,7 +3,7 @@
   if(typeof hsmatch === 'undefined') {
 
     var HSMatch = function() {
-      this.baseUrl = 'http://0.0.0.0:5000/';
+      this.baseUrl = 'https://hsmatch.herokuapp.com/';
     };
 
     HSMatch.prototype.init = function() {
