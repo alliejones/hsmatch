@@ -1,6 +1,6 @@
 ;(function() {
   // don't reinitialize the bookmarklet if it has already been run
-  if(typeof HSMatch === 'undefined') {
+  if(typeof hsmatch === 'undefined') {
 
     var HSMatch = function() {
       this.baseUrl = 'http://0.0.0.0:5000/';
