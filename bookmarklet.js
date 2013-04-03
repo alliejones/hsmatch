@@ -48,23 +48,22 @@
 
 
     /* Not used in bookmarklet itself
-     * Returns person/skill data from page as an object
-     */
+    * Returns person/skill data from page as an object
+    */
     HSMatch.prototype.scrape = function() {
-      var people = [];
+      var people = {};
       $.each($('.person'), function() {
         var skills = $('.skills', this).text().split(', ');
         $.map(skills, function (val, i) {
           return $.trim(val).toLowerCase().replace(/[-\/]/g, '');
         });
-        people.push({
-          name: $('.name', this).text(),
+        var name = $('.name', this).text()
+        people[name] = {
           skills: skills
-        });
+        };
       });
       return people;
     };
-
 
 
     var Modal = function(page) {
