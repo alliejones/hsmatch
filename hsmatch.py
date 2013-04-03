@@ -36,15 +36,16 @@ class HSMatch(object):
       numerical_data[person] = v
 
     # compare_person set via command line argument
-    results = {}
+    results = []
     for person, vector in numerical_data.items():
       d = jaccard(numerical_data[compare_person], numerical_data[person])
-      results[person] = {
+      results.append({
+        'name': person,
         'score': d,
         'shared_skills': list(set(self.data[compare_person]['skills']).intersection(set(self.data[person]['skills'])))
-      }
+      })
 
-    return sorted(results.items(), key=lambda(u,s):(s['score'], u))
+    return sorted(results, key=lambda(s):(s['score']))
 
 
   def print_results(self, results):

@@ -35,10 +35,18 @@
       var name = name;
 
       return function (matches) {
-        var selector = $.map(matches, function(match, i) { return '.person:contains("'+match[0]+'")'; }).join(', ');
-        var people = $(selector).clone().css({ width: '150px', display: 'inline-block', verticalAlign: 'top', margin: '15px' });
+        var modal = $('#'+self.modal.id);
+        console.log(matches);
+        var peopleSelector = $.map(matches, function(match, i) { return '.person:contains("'+match.name+'")'; }).join(', ');
+        var people = $(peopleSelector).clone().css({ width: '150px', display: 'inline-block', verticalAlign: 'top', margin: '15px' });
         $('.find_matches, .skills, .irc', people).remove();
-        $('#'+self.modal.id+' .matches').empty().append('<h2>Hacker Schoolers with the skillset most like '+name+':</h2>').after(people);
+
+        $('.matches', modal).empty().append('<h2>Hacker Schoolers with the skillset most like '+name+':</h2>').after(people);
+
+        $.each(matches, function(i, match) {
+          var name = match.name;
+          $('.name:contains('+name+')', modal).append('<br><strong>Shared skills:</strong> '+match.shared_skills.join(', '));
+        });
       };
     };
 
@@ -74,19 +82,19 @@
         background: '#fff',
         border: '5px solid #000',
         width: '920px',
-        height: '500px',
+        height: '550px',
         position: 'fixed',
         top: '50%',
-        marginTop: '-250px',
+        marginTop: '-275px',
         left: '50%',
-        marginLeft: '-485px',
+        marginLeft: '-460px',
         padding: '0 20px',
         boxShadow: '0 0 15px rgba(0, 0, 0, .5)'
       };
     };
 
     Modal.prototype.show = function(name) {
-      var html = '<div id="'+this.id+'"><h1>Hacker School Match</h1><br><ul class="matches" style="text-align:center"><p class="loading">Loading matches for '+name+' ...</p></ul><p><a href="#" class="close">Close</a></div>';
+      var html = '<div id="'+this.id+'"><h1>Hacker School Match</h1><br><ul class="matches" style="text-align:center"><p class="loading">Loading matches for '+name+' ...</p></ul><p><a href="#" class="close" style="position:absolute;top:10px;right:20px;">Close</a></div>';
       $(html).css(this.styles).appendTo('body');
       this.page.getMatches(name);
     };
@@ -94,7 +102,7 @@
     Modal.prototype.closeHandler = function() {
       var id = this.id;
       return function(e) {
-        $('#'+id).remove();
+        $('#hsmatch-modal').remove();
         e.preventDefault();
       }
     };
