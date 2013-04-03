@@ -36,7 +36,6 @@
 
       return function (matches) {
         var modal = $('#'+self.modal.id);
-        console.log(matches);
         var peopleSelector = $.map(matches, function(match, i) { return '.person:contains("'+match.name+'")'; }).join(', ');
         var people = $(peopleSelector).clone().css({ width: '150px', display: 'inline-block', verticalAlign: 'top', margin: '15px' });
         $('.find_matches, .skills, .irc', people).remove();
