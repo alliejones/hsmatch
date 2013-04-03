@@ -20,7 +20,6 @@ def index():
 
   return Response(data, mimetype='application/javascript')
 
-
 def match_json(person):
   sim = HSMatch()
   try:
