@@ -1,5 +1,5 @@
 import os, json
-from flask import Flask, request
+from flask import Flask, request, Response
 from hsmatch import HSMatch
 
 app = Flask(__name__)
@@ -10,13 +10,15 @@ def index():
   person = request.args.get('person', None)
   callback = request.args.get('callback', None)
   if person is None:
-    return json.dumps({})
+    data = json.dumps({})
   else:
     data = match_json(person)
     if callback is None:
-      return data
+      data = data
     else:
-      return callback + '(' + data + ')'
+      data = callback + '(' + data + ')'
+
+  return Response(data, mimetype='application/javascript')
 
 
 def match_json(person):
